@@ -1,1 +1,40 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional
 
+# Pydantic Models
+class GenerateRequest(BaseModel):
+    category: str
+    emotion: int
+    context: Optional[str] = None
+    situation: int
+    q1: str
+    q2: str
+    q3: str
+    q4: str
+
+class GenerateResponse(BaseModel):
+    response: str
+
+app = FastAPI(title = "Reframe")
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # replace with specific domains?
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+
+# Check Health
+@app.get("/health")
+def check_health():
+    return {"status": "healthy"}
+
+@app.post("/generate-path")
+def generate_path(request: GenerateRequest):
+    # ai logic
+    response = "ai response"
+    return GenerateResponse(ai_response = response)
