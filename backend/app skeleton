@@ -1,23 +1,36 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator, Field
 from typing import Optional
 
 # Pydantic Models
 class GenerateRequest(BaseModel):
     category: str
-    emotion: int
+    emotion: int = Field(ge=1, le=7)
     context: Optional[str] = None
-    situation: int
-    q1: str
-    q2: str
-    q3: str
-    q4: str
+    situation: int = Field(ge=1, le=5)
+    q1: str = Field(min_length=1)
+    q2: str = Field(min_length=1)
+    q3: str = Field(min_length=1)
+    q4: str = Field(min_length=1)
+
+    @field_validator("category")
+    @classmethod
+    def category_validation(cls, category: str):
+        valid_categories = ["School", "Internships", "Career", "Life"]
+        if category not in valid_categories:
+            raise ValueError("Invalid category")
+        return category
 
 class GenerateResponse(BaseModel):
-    response: str
+    reframe: str
+    decode: str
+    next_step1: str
+    next_step2: str
+    next_step3: str
+    view: str = "week"
 
-app = FastAPI(title = "Reframe")
+app = FastAPI(title = "Reframe API")
 
 # Enable CORS
 app.add_middleware(
