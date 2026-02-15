@@ -43,7 +43,7 @@ class timeline_item(BaseModel):
     month: List[timeline_action]
 
 class GenerateResponse(BaseModel):
-    planId = str
+    planId: str
     reframe: str
     analysis: list[str]
     actions: List[action_item]
@@ -72,23 +72,17 @@ def generate_ai_response(request: GenerateRequest) -> str:
     """
     prompt = f"""You are a supportive career and education advisor helping students and young professionals.
 
-The user is feeling stressed about their {request.category} situation.
-Their emotional intensity level is {request.emotion}/10.
-Situation type: {request.situation}
+Category: {request.category}
+Timeframe: {request.timeframe}
+{f"User's situation: {request.userinput}" if request.userinput else ""}
 
-Their responses to the questions:
-- Q1: {request.q1}
-- Q2: {request.q2}
-- Q3: {request.q3}
-- Q4: {request.q4}
-
-{f"Additional context: {request.context}" if request.context else ""}
+The user is feeling stressed or uncertain about their {request.category.lower()} situation. Help them reframe their perspective and create an actionable plan.
 
 Please provide:
-1. A reframed perspective on their situation
-2. A brief explanation of why this reframe helps
-3. Three concrete next steps they can take
-4. A timeline: what to do this week vs. this month
+1. A reframed perspective - help them see their situation in a more empowering way
+2. Analysis - 2-3 key insights about their situation
+3. Three concrete action items with titles and descriptions
+4. A timeline with specific tasks for this week and this month
 
 Be empathetic, practical, and encouraging. Help them feel less "behind" and more empowered."""
 
