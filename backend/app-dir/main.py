@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, field_validator, Field
+from typing import Optional, List
 import os
 from dotenv import load_dotenv
 from groq import Groq
@@ -15,23 +15,46 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # Pydantic Models
 class GenerateRequest(BaseModel):
     category: str
-    emotion: int
-    context: Optional[str] = None
-    situation: int
-    q1: str
-    q2: str
-    q3: str
-    q4: str
+    #emotion: int = Field(ge=1, le=7)
+    userinput: Optional[str] = None
+    #situation: int = Field(ge=1, le=5)
+    #intensity: int=Field(ge=1, le=10)
+    #additional_context: Optional[str] = None 
+    timeframe: str # changed request class to match frontend
+
+    @field_validator("category")
+    @classmethod
+    def category_validation(cls, category: str):
+        valid_categories = ["School", "Internships", "Career", "Life"]
+        if category not in valid_categories:
+            raise ValueError("Invalid category")
+        return category
+
+class action_item(BaseModel):
+    title: str
+    description: str
+
+class timeline_action(BaseModel):
+    title: str
+    description: str
+
+class timeline_item(BaseModel):
+    week: List[timeline_action]
+    month: List[timeline_action]
 
 class GenerateResponse(BaseModel):
-    response: str
+    planId = str
+    reframe: str
+    analysis: list[str]
+    actions: List[action_item]
+    timeline: List[timeline_item] # changed response class to match frontend
 
-app = FastAPI(title="Reframe")
+app = FastAPI(title="Reframe API")
 
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO for Xinya - replace with specific domains for production
+    allow_origins=["http://localhost:8000"],  # TODO for Xinya - replace with specific domains for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -86,7 +109,6 @@ Be empathetic, practical, and encouraging. Help them feel less "behind" and more
 def generate_path(request: GenerateRequest):
     # TODO for Xinya - add data verification/validation here before processing
 
-    # AI logic
     ai_response = generate_ai_response(request)
 
     # TODO for Xinya - add response formatting here before returning
