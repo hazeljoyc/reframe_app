@@ -5,10 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./home.css";
 
 const ORBS = [
-  { id: "school", label: "School", descriptor: "Feeling overwhelmed or uncertain?", href: "/decode?category=school", pos: "tl", color: "59789F" },
-  { id: "internships", label: "Internships", descriptor: "Trying to break in?", href: "/decode?category=internships", pos: "tr", color: "7A9445" },
-  { id: "career", label: "Career", descriptor: "Stuck or searching for more?", href: "/decode?category=career", pos: "bl", color: "A9B6C4" },
-  { id: "life", label: "Life/Adulting", descriptor: "Out of balance?", href: "/decode?category=life", pos: "br", color: "ECE69D" },
+  { id: "school", label: "School", descriptor: "Finding clarity in your academic path.", href: "/decode?category=school", pos: "tl", color: "59789F" },
+  { id: "internships", label: "Internships", descriptor: "Breaking into your next opportunity.", href: "/decode?category=internships", pos: "tr", color: "7A9445" },
+  { id: "career", label: "Career", descriptor: "Repositioning where you're headed.", href: "/decode?category=career", pos: "bl", color: "A9B6C4" },
+  { id: "life", label: "Life/Adulting", descriptor: "Balancing growth with real life.", href: "/decode?category=life", pos: "br", color: "ECE69D" },
 ];
 
 export default function Home() {
@@ -109,9 +109,14 @@ export default function Home() {
       ))}
       </div>
 
-      <Link href="/" className="home-logo" aria-label="Reframe">
-        <span className="home-logo-img" />
-      </Link>
+      <header className="home-header">
+        <Link href="/" className="home-logo" aria-label="Reframe">
+          <span className="home-logo-img" />
+        </Link>
+        <Link href="/about" className="home-about-btn" aria-label="About Reframe">
+          About
+        </Link>
+      </header>
 
       <div className="home-center">
         <div className="home-content-block">
@@ -126,7 +131,7 @@ export default function Home() {
             to change?
           </p>
           </div>
-          <Link href="/decode" className="home-cta">
+          <Link href="/categories" className="home-cta">
             Start Reframing
           </Link>
         </div>
@@ -181,7 +186,7 @@ export default function Home() {
         <div className="section-content home-section-inner home-section-final-inner">
           <h2 className="reveal" style={{ transitionDelay: "0.2s" }}>Ready to see it differently?</h2>
           <p className="reveal" style={{ transitionDelay: "0.4s" }}>It only takes a few minutes to shift your perspective.</p>
-          <Link href="/decode" className="cta home-cta reveal" style={{ transitionDelay: "0.6s" }}>
+          <Link href="/categories" className="home-cta reveal cta-no-hover-delay" style={{ transitionDelay: "0.6s" }}>
             Start Reframing
           </Link>
         </div>

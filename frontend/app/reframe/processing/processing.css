@@ -1,0 +1,278 @@
+/* AI Processing — Reflective design moment */
+
+/* Palette: Glaucous #59789F | Powder Blue #A9B6C4 | Vanilla #ECE69D | Moss Green #7A9445 | Dark Green #243C2C */
+
+.processing-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.processing-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('/categories-bg.png') center / cover no-repeat;
+  animation: processing-bg-float 28s ease-in-out infinite;
+}
+
+.processing-screen .processing-bg {
+  filter: blur(1px);
+  -webkit-filter: blur(1px);
+}
+
+@keyframes processing-bg-float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(2px, -3px); }
+  66% { transform: translate(-2px, 2px); }
+}
+
+.processing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Back button — top left, same placement as previous steps */
+.processing-header-nav {
+  position: fixed;
+  top: 40px;
+  left: 48px;
+  z-index: 20;
+}
+
+.processing-back {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.5;
+  filter: blur(0.5px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.4s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.processing-back:hover {
+  text-decoration: none;
+}
+
+.processing-back-ready {
+  opacity: 0.7;
+  filter: none;
+  pointer-events: auto;
+}
+
+.processing-back-ready:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.processing-back-ready:active {
+  transform: scale(0.97);
+}
+
+/* Central orb — drifts in, breathes, intensity-based color */
+.processing-orb {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 320px;
+  height: 320px;
+  margin-left: -160px;
+  margin-top: -160px;
+  border-radius: 50%;
+  z-index: 2;
+  pointer-events: none;
+  animation:
+    processing-orb-drift 3s ease-out forwards,
+    processing-orb-breathe 5s ease-in-out 3s infinite;
+}
+
+/* Low intensity (1-3): softer, cooler, lower saturation */
+.processing-orb[data-intensity="1"],
+.processing-orb[data-intensity="2"],
+.processing-orb[data-intensity="3"] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(169, 182, 196, 0.4) 0%,
+    rgba(169, 182, 196, 0.2) 40%,
+    rgba(169, 182, 196, 0.08) 70%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 120px rgba(169, 182, 196, 0.25),
+    inset 0 0 60px rgba(255, 255, 255, 0.15);
+}
+
+/* Mid intensity (4-6): balanced */
+.processing-orb[data-intensity="4"],
+.processing-orb[data-intensity="5"],
+.processing-orb[data-intensity="6"] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(122, 148, 69, 0.35) 0%,
+    rgba(89, 120, 159, 0.2) 35%,
+    rgba(89, 120, 159, 0.08) 65%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 100px rgba(122, 148, 69, 0.2),
+    0 0 60px rgba(89, 120, 159, 0.15),
+    inset 0 0 50px rgba(255, 255, 255, 0.12);
+}
+
+/* High intensity (7-10): more saturated, warmer glow */
+.processing-orb[data-intensity="7"],
+.processing-orb[data-intensity="8"],
+.processing-orb[data-intensity="9"],
+.processing-orb[data-intensity="10"] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(122, 148, 69, 0.45) 0%,
+    rgba(89, 120, 159, 0.25) 35%,
+    rgba(36, 60, 44, 0.1) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 140px rgba(122, 148, 69, 0.3),
+    0 0 80px rgba(89, 120, 159, 0.2),
+    inset 0 0 60px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes processing-orb-drift {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-30px) scale(0.75);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes processing-orb-breathe {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.06);
+    opacity: 0.94;
+  }
+}
+
+/* Main content */
+.processing-main-fade-out {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.processing-main {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 120px;
+  box-sizing: border-box;
+}
+
+.processing-header {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: processing-fade-in 1.2s ease-out forwards;
+}
+
+@keyframes processing-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.processing-step {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  color: #243C2C;
+  opacity: 0.6;
+  margin: 0 0 16px;
+  font-weight: 400;
+}
+
+.processing-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3.2vw, 38px);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  margin: 0;
+}
+
+/* Phrase slot — fixed height to prevent layout shift */
+.processing-phrase-slot {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 120px;
+}
+
+.processing-phrase {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: #243C2C;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.processing-phrase-visible {
+  opacity: 0.5;
+  transform: translateY(0);
+}
+
+/* Microcopy below orb area */
+.processing-microcopy {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  color: #243C2C;
+  margin: 0;
+  text-align: center;
+  animation: processing-microcopy-in 1.4s ease-out 0.5s forwards;
+  opacity: 0;
+}
+
+@keyframes processing-microcopy-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+}

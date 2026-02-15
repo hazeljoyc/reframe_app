@@ -34,3 +34,56 @@ body {
 .animate-text-breathe {
   animation: text-breathe 4s ease-in-out infinite;
 }
+
+/* Shared multi-step UI */
+.step-label {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  color: #243C2C;
+  opacity: 0.6;
+  margin: 0 0 12px;
+  font-weight: 400;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shared multi-step progress bar (Step 1/2/3) */
+.step-progress {
+  width: 120px;
+  height: 3px;
+  background: rgba(36, 60, 44, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.step-progress-fill {
+  width: 0;
+  height: 100%;
+  background: rgba(36, 60, 44, 0.22);
+  border-radius: 2px;
+}
+
+@keyframes step-progress-in {
+  to { width: 33%; }
+}
+
+@keyframes step-progress-66 {
+  to { width: 66%; }
+}
+
+@keyframes step-progress-100 {
+  to { width: 100%; }
+}
