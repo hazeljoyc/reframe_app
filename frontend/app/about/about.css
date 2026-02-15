@@ -1,0 +1,513 @@
+/* About — Reframe visual system, cinematic scroll */
+
+/* Palette: Glaucous #59789F | Powder Blue #A9B6C4 | Vanilla #ECE69D | Moss Green #7A9445 | Dark Green #243C2C */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.about-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Background + parallax */
+.about-bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transform: translateY(calc(var(--about-scroll-y, 0px) * 0.5));
+  transition: transform 0.15s ease-out;
+}
+
+.about-bg {
+  position: absolute;
+  inset: -20px;
+  background: url('/categories-bg.png') center / cover no-repeat;
+}
+
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Parallax orbs — subtle, scroll-responsive */
+.about-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 2;
+  transform: translateY(var(--about-scroll-y, 0px));
+  transition: transform 0.2s ease-out;
+}
+
+.about-orb-1 {
+  width: 320px;
+  height: 320px;
+  top: 10%;
+  left: 5%;
+  background: radial-gradient(circle, rgba(89, 120, 159, 0.25) 0%, transparent 70%);
+}
+
+.about-orb-2 {
+  width: 280px;
+  height: 280px;
+  top: 50%;
+  right: 10%;
+  background: radial-gradient(circle, rgba(122, 148, 69, 0.2) 0%, transparent 70%);
+}
+
+.about-orb-3 {
+  width: 240px;
+  height: 240px;
+  bottom: 15%;
+  left: 15%;
+  background: radial-gradient(circle, rgba(236, 230, 157, 0.22) 0%, transparent 70%);
+}
+
+@media (max-width: 768px) {
+  .about-orb {
+    transform: translateY(calc(var(--about-scroll-y, 0px) * 0.5));
+  }
+}
+
+/* Header */
+.about-header {
+  position: fixed;
+  top: 40px;
+  left: 48px;
+  z-index: 20;
+}
+
+.about-back {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.about-back:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  text-decoration: none;
+}
+
+.about-back:active {
+  transform: scale(0.98);
+}
+
+/* Main content */
+.about-main {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 24px 120px;
+  box-sizing: border-box;
+}
+
+/* Fade-up reveal */
+.about-section {
+  width: 100%;
+  max-width: 680px;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+
+.about-section.about-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section 1 — Hero */
+.about-hero {
+  text-align: center;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 100px;
+}
+
+.about-hero-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  margin: 0 0 24px;
+}
+
+.about-hero-divider {
+  width: 60px;
+  height: 1px;
+  background: rgba(36, 60, 44, 0.35);
+  margin: 0 auto 28px;
+}
+
+.about-hero-sub {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.9;
+  margin: 0 0 8px;
+}
+
+.about-hero-subtext {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.9;
+  margin: 0 0 16px;
+}
+
+.about-hero-optional {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.7;
+  margin: 0 0 40px;
+}
+
+/* Primary button */
+.about-btn-primary {
+  display: inline-block;
+  padding: 16px 48px;
+  border-radius: 999px;
+  background: #243C2C;
+  color: #ECE69D;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  box-shadow: 0 2px 16px rgba(36, 60, 44, 0.15);
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.about-btn-primary:hover {
+  transform: scale(1.05);
+  background: #1e3227;
+}
+
+.about-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Glass card base */
+.about-glass-card {
+  padding: 32px 36px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+}
+
+/* Section 2 — The Problem */
+.about-problem-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (min-width: 700px) {
+  .about-problem-grid {
+    grid-template-columns: 0.9fr 1fr;
+    gap: 48px;
+  }
+}
+
+.about-problem-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  margin: 0;
+}
+
+.about-problem-card {
+  min-height: 200px;
+}
+
+.about-problem-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #243C2C;
+  opacity: 0.9;
+}
+
+.about-problem-list li {
+  margin-bottom: 14px;
+  padding-left: 24px;
+  position: relative;
+}
+
+.about-problem-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  opacity: 0.5;
+}
+
+.about-problem-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Section 3 — The Shift */
+.about-shift {
+  text-align: center;
+}
+
+.about-shift-statement {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(24px, 3.5vw, 34px);
+  line-height: 1.4;
+  color: #243C2C;
+  margin: 0 0 48px;
+}
+
+.about-shift-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .about-shift-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+.about-shift-card {
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.about-shift-card:hover {
+  transform: scale(1.05);
+}
+
+.about-shift-icon {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.about-shift-card h3 {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0 0 8px;
+  color: #243C2C;
+}
+
+.about-shift-card p {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* Section 4 — Everyone Has Issues */
+.about-issues {
+  text-align: center;
+}
+
+.about-issues-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.25;
+  color: #243C2C;
+  margin: 0 0 16px;
+}
+
+.about-issues-sub {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.8;
+  margin: 0 0 32px;
+}
+
+.about-issues-punch {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2.5vw, 26px);
+  line-height: 1.5;
+  color: #243C2C;
+  margin: 0 0 24px;
+}
+
+.about-issues-closer {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Section 5 — What Makes It Different */
+.about-different-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-diff-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.about-different.about-visible .about-diff-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-different.about-visible .about-diff-card:nth-child(1) { transition-delay: 0ms; }
+.about-different.about-visible .about-diff-card:nth-child(2) { transition-delay: 120ms; }
+.about-different.about-visible .about-diff-card:nth-child(3) { transition-delay: 240ms; }
+
+.about-diff-card:hover {
+  transform: scale(1.05);
+}
+
+.about-diff-card h3 {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 500;
+  font-size: 19px;
+  margin: 0 0 10px;
+  color: #243C2C;
+}
+
+.about-diff-card p {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* Section 6 — Final CTA */
+.about-cta {
+  text-align: center;
+  padding-top: 40px;
+}
+
+.about-cta-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.25;
+  color: #243C2C;
+  margin: 0 0 32px;
+}
+
+.about-cta-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+@media (max-width: 480px) {
+  .about-cta-buttons {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.about-btn-secondary {
+  display: inline-block;
+  margin: 0;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.75;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.about-btn-secondary:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.about-btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .about-main {
+    padding: 100px 20px 80px;
+  }
+
+  .about-section {
+    margin-bottom: 60px;
+  }
+
+  .about-hero {
+    min-height: 50vh;
+    margin-bottom: 80px;
+  }
+
+  .about-glass-card {
+    padding: 24px 28px;
+    border-radius: 20px;
+  }
+}
