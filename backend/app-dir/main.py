@@ -69,7 +69,7 @@ app.add_middleware(
 def check_health():
     return {"status": "healthy"}
 
-def generate_ai_response(request: GenerateRequest) -> str:
+def generate_ai_response(request: GenerateRequest) -> dict:
     """
     AI prompt wrapper - sends user input to Groq and returns AI-generated response.
     """
@@ -140,25 +140,28 @@ Return ONLY a JSON object with this exact structure (no extra text, just the JSO
     except json.JSONDecodeError:
         return {"error": "Error generating valid JSON object"}
 
-@app.get("/api/plan/:planId")
-def generate_planId(length=6):
+def generate_plan_id(length=6):
+    """Generate a random plan ID."""
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for i in range(length))
+
 
 @app.post("/generate-path")
 def generate_path(request: GenerateRequest):
     request.timeframe = "week"
 
     ai_response = generate_ai_response(request)
-    planId = generate_planId()
-    ai_response["planId"] = planId
+
+    # Check if AI returned an error
+    if "error" in ai_response:
+        return {"error": True, "message": "Failed to generate AI response."}
+
+    plan_id = generate_plan_id()
+    ai_response["planId"] = plan_id
 
     # Validation for response
     try:
         validated_response = GenerateResponse.model_validate(ai_response)
         return validated_response
     except ValidationError as error:
-        return{
-  "error": True,
-  "message": "Something went wrong."
-}
+        return {"error": True, "message": "Something went wrong."}

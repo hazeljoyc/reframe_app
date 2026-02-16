@@ -9,29 +9,54 @@
 ```json
 {
   "category": "internships",
-  "emotion": 7,
-  "situation": 1,
-  "q1": "User answer 1",
-  "q2": "User answer 2",
-  "q3": "User answer 3",
-  "q4": "User answer 4",
-  "context": "optional extra context"
+  "emotion": 4,
+  "situation": "I don't know where to start",
+  "intensity": 7,
+  "context": "Feeling behind my peers",
+  "additional_context": "Sophomore CS student"
 }
 ```
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| category | string | Yes | One of: "education", "internships", "career" |
-| emotion | int | Yes | Emotional intensity level (1-10) |
-| situation | int | Yes | Situation type identifier |
-| q1-q4 | string | Yes | User's answers to the adaptive questions |
-| context | string | No | Optional additional context |
+| category | string | Yes | One of: "school", "internships", "career", "life" |
+| emotion | int | Yes | Emoji index 0-6 (0=calm, 6=deeply frustrated) |
+| situation | string | Yes | The reflection text - what feels most true |
+| intensity | int | Yes | Intensity level 1-10 |
+| context | string | No | Emotional context from step 2 |
+| additional_context | string | No | Optional extra context from step 3 |
+| timeframe | string | No | Defaults to "week" |
 
 ## Response
 
 ```json
 {
-  "response": "AI-generated text with reframe, explanation, next steps, and timeline"
+  "planId": "abc123",
+  "reframe": "You're not behind, you're just getting started...",
+  "analysis": [
+    "Insight 1 about their situation",
+    "Insight 2 about their situation",
+    "Insight 3 about their situation"
+  ],
+  "actions": [
+    { "title": "Action 1", "description": "Description of action 1" },
+    { "title": "Action 2", "description": "Description of action 2" },
+    { "title": "Action 3", "description": "Description of action 3" }
+  ],
+  "timeline": [
+    {
+      "week": [
+        { "title": "Week task 1", "description": "Description" },
+        { "title": "Week task 2", "description": "Description" },
+        { "title": "Week task 3", "description": "Description" }
+      ],
+      "month": [
+        { "title": "Month task 1", "description": "Description" },
+        { "title": "Month task 2", "description": "Description" },
+        { "title": "Month task 3", "description": "Description" }
+      ]
+    }
+  ]
 }
 ```
 
@@ -72,12 +97,11 @@ curl -X POST http://localhost:8000/generate-path \
   -H "Content-Type: application/json" \
   -d '{
     "category": "internships",
-    "emotion": 7,
-    "situation": 1,
-    "q1": "I feel stuck",
-    "q2": "No callbacks",
-    "q3": "Sophomore CS major",
-    "q4": "Want to work in tech"
+    "emotion": 4,
+    "situation": "I don't know where to start",
+    "intensity": 7,
+    "context": "Feeling behind my peers",
+    "additional_context": "Sophomore CS student"
   }'
 ```
 
@@ -91,17 +115,18 @@ const response = await fetch('http://localhost:8000/generate-path', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     category: 'internships',
-    emotion: 7,
-    situation: 1,
-    q1: '...',
-    q2: '...',
-    q3: '...',
-    q4: '...'
+    emotion: 4,
+    situation: "I don't know where to start",
+    intensity: 7,
+    context: 'Feeling behind my peers',
+    additional_context: 'Sophomore CS student'
   })
 });
 
 const data = await response.json();
-console.log(data.response);
+console.log(data.reframe);
+console.log(data.actions);
+console.log(data.timeline);
 ```
 
 ---
