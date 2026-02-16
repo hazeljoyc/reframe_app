@@ -95,6 +95,23 @@ function ResultsContent() {
     return () => ob.disconnect();
   }, []);
 
+  useEffect(() => {
+    const cards = document.querySelectorAll(".results-reframe-card, .results-meaning-card-mini");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !entry.target.classList.contains("results-accent-active")) {
+            entry.target.classList.add("results-accent-active");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: "0px" }
+    );
+    cards.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const handleActivate = (index: number) => {
     setActivatedIndex((prev) => (prev === index ? null : index));
   };
@@ -165,27 +182,43 @@ function ResultsContent() {
         {/* Section 1 — Emotional Reframe */}
         <section className="results-hero-section results-reveal">
           <h1 className="results-hero-title">Your next steps in motion.</h1>
-          <p className="results-hero-subtitle">Clarity becomes momentum.</p>
+          <p className="results-hero-subtitle">
+            Clarity becomes <span className="results-momentum-underline">momentum</span>.
+          </p>
           <div className="results-reframe-card-wrap">
+            <span className="results-ai-insight-label">AI Insight</span>
             <div className="results-card results-reframe-card">
-              <p className="results-reframe-text">
-                You&apos;re not behind. You&apos;re in a transition phase — and that&apos;s exactly when clarity matters most.
-              </p>
+              <div className="results-accent-line" aria-hidden>
+                <div className="results-accent-line-fill" />
+              </div>
+              <div className="results-reframe-card-content">
+                <p className="results-reframe-text">
+                  You&apos;re not behind. You&apos;re in a transition phase — and that&apos;s exactly when clarity matters most.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Section 2 — What This Actually Means */}
-        <section className="results-section results-reveal">
+        <section className="results-section results-meaning-section results-reveal">
           <h2 className="results-section-title">What this actually means</h2>
-          <div className="results-card results-meaning-card">
-            <ul className="results-meaning-list">
-              {MEANING_ITEMS.map((item, i) => (
-                <li key={i} className="results-meaning-bullet" style={{ animationDelay: `${150 * i}ms` }}>
-                  <span className="results-meaning-label">{item.label}</span> — {item.text}
-                </li>
-              ))}
-            </ul>
+          <div className="results-meaning-cards">
+            {MEANING_ITEMS.map((item, i) => (
+              <div
+                key={i}
+                className="results-meaning-card-mini"
+                style={{ animationDelay: `${80 * i}ms` }}
+              >
+                <div className="results-accent-line" aria-hidden>
+                  <div className="results-accent-line-fill" />
+                </div>
+                <div className="results-meaning-card-content">
+                  <h3 className="results-meaning-card-title">{item.label}</h3>
+                  <p className="results-meaning-card-text">{item.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
