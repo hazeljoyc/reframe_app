@@ -18,20 +18,21 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 # Pydantic Models
 class GenerateRequest(BaseModel):
     category: str
-    emotion: int = Field(ge=1, le=7)
-    emotion_context: Optional[str] = None
-    situation: int
-    intensity: int=Field(ge=1, le=10)
-    additional_context: Optional[str] = None 
-    timeframe: str 
+    emotion: int = Field(ge=0, le=6)  # 0-6 emoji index from frontend
+    context: Optional[str] = None  # renamed from emotion_context to match frontend
+    situation: str  # changed from int to str - the reflection text from frontend
+    intensity: int = Field(ge=1, le=10)
+    additional_context: Optional[str] = None
+    timeframe: str = "week"  # default to "week"
 
     @field_validator("category")
     @classmethod
     def category_validation(cls, category: str):
-        valid_categories = ["School", "Internships", "Career", "Life"]
-        if category not in valid_categories:
+        # Accept lowercase from frontend, capitalize for internal use
+        valid_categories = ["school", "internships", "career", "life"]
+        if category.lower() not in valid_categories:
             raise ValueError("Invalid category")
-        return category
+        return category.capitalize()  # Convert to capitalized version
 
 class action_item(BaseModel):
     title: str
@@ -72,15 +73,18 @@ def generate_ai_response(request: GenerateRequest) -> str:
     """
     AI prompt wrapper - sends user input to Groq and returns AI-generated response.
     """
+    # Convert emotion index (0-6) to display value (1-7)
+    emotion_display = request.emotion + 1
+
     prompt = f"""You are a supportive career and education advisor helping students and young professionals.
 
 Category: {request.category}
 Timeframe: {request.timeframe}
-Emotion level: {request.emotion}/7 (1 = feeling good, 7 = feeling terrible)
-Situation type: {request.situation}
+Emotion level: {emotion_display}/7 (1 = feeling calm, 7 = feeling deeply frustrated)
+What feels most true: {request.situation}
 Intensity: {request.intensity}/10
 
-{f"Emotional context: {request.emotion_context}" if request.emotion_context else ""}
+{f"Emotional context: {request.context}" if request.context else ""}
 {f"Additional context: {request.additional_context}" if request.additional_context else ""}
 
 The user is feeling stressed about their {request.category.lower()} situation. Help them reframe their perspective and create an actionable plan.
@@ -134,7 +138,7 @@ Return ONLY a JSON object with this exact structure (no extra text, just the JSO
     try:
         return json.loads(data)
     except json.JSONDecodeError:
-        return {"Error: Error generating valid JSON object"}
+        return {"error": "Error generating valid JSON object"}
 
 @app.get("/api/plan/:planId")
 def generate_planId(length=6):
