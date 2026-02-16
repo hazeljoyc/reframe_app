@@ -87,3 +87,71 @@ body {
 @keyframes step-progress-100 {
   to { width: 100%; }
 }
+
+/* Global header right — audio toggle + About (home only) */
+.global-header-right {
+  position: fixed;
+  top: 40px;
+  right: 48px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.global-audio-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #243C2C;
+  cursor: pointer;
+  opacity: 0.75;
+  transform-origin: center;
+  transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+}
+
+.global-audio-toggle:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 6px rgba(36, 60, 44, 0.15));
+}
+
+.global-audio-toggle:active {
+  transform: scale(0.98);
+}
+
+.global-about-link {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.75;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.global-about-link:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.global-about-link:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .global-header-right {
+    right: 24px;
+  }
+
+  .global-about-link {
+    font-size: 13px;
+  }
+}

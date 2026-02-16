@@ -113,9 +113,7 @@ export default function Home() {
         <Link href="/" className="home-logo" aria-label="Reframe">
           <span className="home-logo-img" />
         </Link>
-        <Link href="/about" className="home-about-btn" aria-label="About Reframe">
-          About
-        </Link>
+        {/* Audio toggle + About rendered by GlobalHeaderRight in layout */}
       </header>
 
       <div className="home-center">
