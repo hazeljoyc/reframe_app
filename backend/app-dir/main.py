@@ -20,7 +20,7 @@ class GenerateRequest(BaseModel):
     category: str
     emotion: int = Field(ge=1, le=7)
     emotion_context: Optional[str] = None
-    situation: int = str
+    situation: int
     intensity: int=Field(ge=1, le=10)
     additional_context: Optional[str] = None 
     timeframe: str 
@@ -74,48 +74,49 @@ def generate_ai_response(request: GenerateRequest) -> str:
     """
     prompt = f"""You are a supportive career and education advisor helping students and young professionals.
 
-<<<<<<< HEAD
 Category: {request.category}
 Timeframe: {request.timeframe}
-{f"User's situation: {request.userinput}" if request.userinput else ""}
-
-The user is feeling stressed or uncertain about their {request.category.lower()} situation. Help them reframe their perspective and create an actionable plan.
-
-Please provide:
-1. A reframed perspective - help them see their situation in a more empowering way
-2. Analysis - 2-3 key insights about their situation
-3. Three concrete action items with titles and descriptions
-4. A timeline with specific tasks for this week and this month
-=======
-The user is feeling stressed about their {request.category} situation.
-Their emotion is {request.emotion}/10, with 1 being feeling good and 10 being feeling terrible.
+Emotion level: {request.emotion}/7 (1 = feeling good, 7 = feeling terrible)
 Situation type: {request.situation}
-The intensity of their feelings is {request.intensity}/10.
+Intensity: {request.intensity}/10
 
 {f"Emotional context: {request.emotion_context}" if request.emotion_context else ""}
 {f"Additional context: {request.additional_context}" if request.additional_context else ""}
 
+The user is feeling stressed about their {request.category.lower()} situation. Help them reframe their perspective and create an actionable plan.
 
 Please provide:
-1. A reframed perspective on their situation
-2. Analysis with three explanations of the reframed perspective.
-3. Three concrete next steps they can take
-4. Three steps for a timeline of what they can do in the next week.
-5. Three steps for a timeline of what they can do in the next year.
->>>>>>> 7a38e8243f950d6d1abda06a7849526be52c4426
+1. A reframed perspective - help them see their situation in a more empowering way
+2. Analysis - exactly 3 key insights about their situation
+3. Three concrete action items with titles and descriptions
+4. A timeline with 3 tasks for this week and 3 tasks for this month
 
 Be empathetic, practical, and encouraging. Help them feel less "behind" and more empowered.
 
-Return ONLY a JSON object with this exact structure:
+Return ONLY a JSON object with this exact structure (no extra text, just the JSON):
+{{
+  "reframe": "your reframed perspective here",
+  "analysis": ["insight 1", "insight 2", "insight 3"],
+  "actions": [
+    {{ "title": "action 1 title", "description": "action 1 description" }},
+    {{ "title": "action 2 title", "description": "action 2 description" }},
+    {{ "title": "action 3 title", "description": "action 3 description" }}
+  ],
+  "timeline": [
     {{
-      "reframe": "string",
-      "analysis": ["string", "string", "string"],
-      "actions": [{{ "title": "string", "description": "string" }}],
-      "timeline": {{
-        "week": [{{ "title": "string", "description": "string" }}],
-        "month": [{{ "title": "string", "description": "string" }}]
-      }}
+      "week": [
+        {{ "title": "week task 1", "description": "description" }},
+        {{ "title": "week task 2", "description": "description" }},
+        {{ "title": "week task 3", "description": "description" }}
+      ],
+      "month": [
+        {{ "title": "month task 1", "description": "description" }},
+        {{ "title": "month task 2", "description": "description" }},
+        {{ "title": "month task 3", "description": "description" }}
+      ]
     }}
+  ]
+}}
     
     """
 
