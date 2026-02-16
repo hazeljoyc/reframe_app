@@ -22,6 +22,9 @@ function ProcessingContent() {
   const intensity = Math.min(10, Math.max(1, parseInt(searchParams.get("intensity") ?? "5", 10)));
   const category = searchParams.get("category") || "life";
   const emotion = searchParams.get("emotion") ?? "2";
+  const situation = searchParams.get("situation") ?? "";
+  const context = searchParams.get("context") ?? "";
+  const additional_context = searchParams.get("additional_context") ?? "";
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [phraseVisible, setPhraseVisible] = useState(false);
@@ -47,7 +50,7 @@ function ProcessingContent() {
     const resultsId = setTimeout(() => {
       setIsTransitioningOut(true);
       navId = setTimeout(() => {
-        router.push(`/reframe/results?category=${category}&emotion=${emotion}&intensity=${intensity}`);
+        router.push(`/reframe/results?category=${category}&emotion=${emotion}&intensity=${intensity}&situation=${encodeURIComponent(situation)}&context=${encodeURIComponent(context)}&additional_context=${encodeURIComponent(additional_context)}`);
       }, 800);
     }, 6000);
     return () => {

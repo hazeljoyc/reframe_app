@@ -49,7 +49,7 @@ function ReframeNextContent() {
   };
 
   const processingHref = isQ1Complete
-    ? `/reframe/processing?category=${category}&emotion=${emotionIndex}&intensity=${intensityLevel ?? 5}`
+    ? `/reframe/processing?category=${category}&emotion=${emotionIndex}&intensity=${intensityLevel ?? 5}&situation=${encodeURIComponent(effectiveReflection || "")}&context=${encodeURIComponent(contextFromStep2)}&additional_context=${encodeURIComponent(additionalContext)}`
     : "#";
 
   return (
