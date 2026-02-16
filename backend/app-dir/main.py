@@ -55,10 +55,14 @@ class GenerateResponse(BaseModel):
 
 app = FastAPI(title="Reframe API")
 
-# Enable CORS
+# Enable CORS - allow localhost and Vercel deployments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://*.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -73,10 +77,11 @@ def generate_ai_response(request: GenerateRequest) -> dict:
     """
     AI prompt wrapper - sends user input to Groq and returns AI-generated response.
     """
-    # Convert emotion index (0-6) to display value (1-7)
-    emotion_display = request.emotion + 1
+    try:
+        # Convert emotion index (0-6) to display value (1-7)
+        emotion_display = request.emotion + 1
 
-    prompt = f"""You are a supportive career and education advisor helping students and young professionals.
+        prompt = f"""You are a supportive career and education advisor helping students and young professionals.
 
 Category: {request.category}
 Timeframe: {request.timeframe}
@@ -124,21 +129,24 @@ Return ONLY a JSON object with this exact structure (no extra text, just the JSO
     
     """
 
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        model="llama-3.3-70b-versatile",
-    )
-    data = chat_completion.choices[0].message.content
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="llama-3.3-70b-versatile",
+        )
+        data = chat_completion.choices[0].message.content
 
-    try:
         return json.loads(data)
     except json.JSONDecodeError:
+        print("JSON decode error - AI returned invalid JSON")
         return {"error": "Error generating valid JSON object"}
+    except Exception as e:
+        print(f"Error in generate_ai_response: {e}")
+        return {"error": f"API error: {str(e)}"}
 
 def generate_plan_id(length=6):
     """Generate a random plan ID."""

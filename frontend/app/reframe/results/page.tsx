@@ -8,44 +8,58 @@ import "./results.css";
 
 type Mode = "week" | "month";
 
-const ACTIONS_WEEK = [
-  "Refine positioning",
-  "Reach out to 1 person",
-  "Submit 2 applications",
+// Types for API response
+type ActionItem = { title: string; description: string };
+type TimelineAction = { title: string; description: string };
+type TimelineItem = { week: TimelineAction[]; month: TimelineAction[] };
+
+type ApiResponse = {
+  planId: string;
+  reframe: string;
+  analysis: string[];
+  actions: ActionItem[];
+  timeline: TimelineItem[];
+};
+
+// Fallback data (used when API fails)
+const FALLBACK_ANALYSIS = [
+  "Unclear benchmarks - It's hard to know what \"on track\" looks like when you're charting your own path.",
+  "Comparison bias - We compare our behind-the-scenes to everyone else's highlight reel.",
+  "Lack of roadmap - Without a clear next step, it's easy to feel stuck even when you're moving.",
 ];
 
-const ACTIONS_MONTH = [
-  "Clarify direction",
-  "Build outreach rhythm",
-  "Secure interviews",
-  "Reflect + recalibrate",
+const FALLBACK_ACTIONS: ActionItem[] = [
+  { title: "Refine positioning", description: "Polish your narrative" },
+  { title: "Reach out to 1 person", description: "One meaningful connection" },
+  { title: "Submit 2 applications", description: "Targeted, intentional" },
 ];
 
-const TIMELINE_NODES_WEEK = [
-  { left: "18%", top: "48%", title: "Refine positioning", desc: "Polish your narrative" },
-  { left: "50%", top: "48%", title: "Reach out to 1 person", desc: "One meaningful connection" },
-  { left: "82%", top: "48%", title: "Submit 2 applications", desc: "Targeted, intentional" },
-];
-
-const TIMELINE_NODES_MONTH = [
-  { left: "12%", top: "48%", title: "Clarify direction", desc: "Define your focus" },
-  { left: "36%", top: "48%", title: "Build outreach rhythm", desc: "Consistent momentum" },
-  { left: "62%", top: "48%", title: "Secure interviews", desc: "Land conversations" },
-  { left: "88%", top: "48%", title: "Reflect + recalibrate", desc: "Review and adjust" },
-];
-
-const MEANING_ITEMS = [
-  { label: "Unclear benchmarks", text: "It's hard to know what \"on track\" looks like when you're charting your own path." },
-  { label: "Comparison bias", text: "We compare our behind-the-scenes to everyone else's highlight reel." },
-  { label: "Lack of roadmap", text: "Without a clear next step, it's easy to feel stuck even when you're moving." },
-];
+const FALLBACK_TIMELINE: TimelineItem = {
+  week: [
+    { title: "Refine positioning", description: "Polish your narrative" },
+    { title: "Reach out to 1 person", description: "One meaningful connection" },
+    { title: "Submit 2 applications", description: "Targeted, intentional" },
+  ],
+  month: [
+    { title: "Clarify direction", description: "Define your focus" },
+    { title: "Build outreach rhythm", description: "Consistent momentum" },
+    { title: "Secure interviews", description: "Land conversations" },
+  ],
+};
 
 function ResultsContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category") || "life";
   const emotion = searchParams.get("emotion") ?? "";
   const intensity = searchParams.get("intensity") ?? "";
+  const situation = searchParams.get("situation") ?? "";
+  const context = searchParams.get("context") ?? "";
+  const additional_context = searchParams.get("additional_context") ?? "";
+
   const [mode, setMode] = useState<Mode>("week");
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [activatedIndex, setActivatedIndex] = useState<number | null>(null);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -53,9 +67,24 @@ function ResultsContent() {
   const timelineRef = useRef<HTMLElement>(null);
   const [timelineVisible, setTimelineVisible] = useState(false);
 
-  const actions = mode === "week" ? ACTIONS_WEEK : ACTIONS_MONTH;
-  const timelineNodesBase = mode === "week" ? TIMELINE_NODES_WEEK : TIMELINE_NODES_MONTH;
+  // Get data from API or use fallbacks
+  const reframe = apiData?.reframe || "You're not behind. You're in a transition phase — and that's exactly when clarity matters most.";
+  const analysis = apiData?.analysis || FALLBACK_ANALYSIS;
+  const actions = apiData?.actions || FALLBACK_ACTIONS;
+  const timelineData = apiData?.timeline?.[0] || FALLBACK_TIMELINE;
+
+  // Get timeline items based on mode
+  const timelineItems = mode === "week" ? timelineData.week : timelineData.month;
   const positions = mode === "week" ? ["18%", "50%", "82%"] : ["12%", "36%", "62%", "88%"];
+
+  // Build timeline nodes with positions
+  const timelineNodesBase = timelineItems.map((item, i) => ({
+    left: positions[i] || "50%",
+    top: "48%",
+    title: item.title,
+    desc: item.description,
+  }));
+
   const orderedNodes =
     activatedIndex !== null && activatedIndex < timelineNodesBase.length
       ? [
@@ -63,8 +92,8 @@ function ResultsContent() {
           ...timelineNodesBase.filter((_, i) => i !== activatedIndex),
         ]
       : timelineNodesBase;
-  const timelineNodes = orderedNodes.map((node, i) => ({ ...node, left: positions[i], top: "48%" }));
-  const activatedAction = activatedIndex !== null && activatedIndex < actions.length ? actions[activatedIndex] : undefined;
+  const timelineNodes = orderedNodes.map((node, i) => ({ ...node, left: positions[i] || "50%", top: "48%" }));
+  const activatedAction = activatedIndex !== null && activatedIndex < actions.length ? actions[activatedIndex]?.title : undefined;
 
   useEffect(() => {
     const els = document.querySelectorAll(".results-reveal");
@@ -129,7 +158,7 @@ function ResultsContent() {
           intensity,
           mode,
           activatedAction,
-          aiResponse: "You're not behind. You're in a transition phase — and that's exactly when clarity matters most.",
+          aiResponse: reframe,
         }),
       });
       const data = await res.json();
@@ -160,6 +189,50 @@ function ResultsContent() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Fetch AI response from backend (only once)
+  const hasFetched = useRef(false);
+  useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const fetchAiResponse = async () => {
+      try {
+        setIsLoading(true);
+        setApiError(null);
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+        const res = await fetch(`${backendUrl}/generate-path`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            category,
+            emotion: parseInt(emotion, 10) || 0,
+            situation: situation || "Feeling uncertain",
+            intensity: parseInt(intensity, 10) || 5,
+            context: context || "",
+            additional_context: additional_context || "",
+          }),
+        });
+        if (!res.ok) {
+          throw new Error(`Backend error: ${res.status}`);
+        }
+        const data = await res.json();
+        if (data.reframe) {
+          setApiData(data as ApiResponse);
+        } else if (data.error) {
+          throw new Error(data.message || "API returned error");
+        } else {
+          setApiError("No reframe generated.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch AI response:", err);
+        setApiError("Failed to connect to backend. Using fallback response.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAiResponse();
+  }, [category, emotion, situation, intensity, context, additional_context]);
 
   return (
     <div className="results-screen">
@@ -192,9 +265,11 @@ function ResultsContent() {
                 <div className="results-accent-line-fill" />
               </div>
               <div className="results-reframe-card-content">
-                <p className="results-reframe-text">
-                  You&apos;re not behind. You&apos;re in a transition phase — and that&apos;s exactly when clarity matters most.
-                </p>
+                {isLoading ? (
+                  <p className="results-reframe-text">Generating your personalized insight...</p>
+                ) : (
+                  <p className="results-reframe-text">{reframe}</p>
+                )}
               </div>
             </div>
           </div>
@@ -204,21 +279,25 @@ function ResultsContent() {
         <section className="results-section results-meaning-section results-reveal">
           <h2 className="results-section-title">What this actually means</h2>
           <div className="results-meaning-cards">
-            {MEANING_ITEMS.map((item, i) => (
-              <div
-                key={i}
-                className="results-meaning-card-mini"
-                style={{ animationDelay: `${80 * i}ms` }}
-              >
-                <div className="results-accent-line" aria-hidden>
-                  <div className="results-accent-line-fill" />
+            {isLoading ? (
+              <p>Loading insights...</p>
+            ) : (
+              analysis.map((insight, i) => (
+                <div
+                  key={i}
+                  className="results-meaning-card-mini"
+                  style={{ animationDelay: `${80 * i}ms` }}
+                >
+                  <div className="results-accent-line" aria-hidden>
+                    <div className="results-accent-line-fill" />
+                  </div>
+                  <div className="results-meaning-card-content">
+                    <h3 className="results-meaning-card-title">Insight {i + 1}</h3>
+                    <p className="results-meaning-card-text">{insight}</p>
+                  </div>
                 </div>
-                <div className="results-meaning-card-content">
-                  <h3 className="results-meaning-card-title">{item.label}</h3>
-                  <p className="results-meaning-card-text">{item.text}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
 
@@ -227,22 +306,27 @@ function ResultsContent() {
           <h2 className="results-section-title">Start with one.</h2>
           <p className="results-start-micro">You don&apos;t need to do everything. Just begin here.</p>
           <div className="results-action-cards">
-            {actions.map((label, i) => {
-              const isSelected = activatedIndex === i;
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  className={`results-action-card ${isSelected ? "results-action-card-selected" : ""} ${activatedIndex !== null && !isSelected ? "results-action-card-dimmed" : ""}`}
-                  onClick={() => handleActivate(i)}
-                >
-                  <span className="results-action-card-label">{label}</span>
-                  {isSelected && (
-                    <span className="results-action-starting-label">✓ This is my starting point</span>
-                  )}
-                </button>
-              );
-            })}
+            {isLoading ? (
+              <p>Loading actions...</p>
+            ) : (
+              actions.map((action, i) => {
+                const isSelected = activatedIndex === i;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`results-action-card ${isSelected ? "results-action-card-selected" : ""} ${activatedIndex !== null && !isSelected ? "results-action-card-dimmed" : ""}`}
+                    onClick={() => handleActivate(i)}
+                    title={action.description}
+                  >
+                    <span className="results-action-card-label">{action.title}</span>
+                    {isSelected && (
+                      <span className="results-action-starting-label">✓ This is my starting point</span>
+                    )}
+                  </button>
+                );
+              })
+            )}
           </div>
         </section>
 
