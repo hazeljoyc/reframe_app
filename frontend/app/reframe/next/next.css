@@ -1,0 +1,401 @@
+/* Step 3 - Hybrid Guided Reflection */
+
+/* Palette: Glaucous #59789F | Powder Blue #A9B6C4 | Vanilla #ECE69D | Moss Green #7A9445 | Dark Green #243C2C */
+
+.reframe-next-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.reframe-next-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('/categories-bg.png') center / cover no-repeat;
+  animation: reframe-next-bg-float 24s ease-in-out infinite;
+}
+
+@keyframes reframe-next-bg-float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(2px, -3px); }
+  66% { transform: translate(-2px, 2px); }
+}
+
+.reframe-next-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.reframe-next-header {
+  position: fixed;
+  top: 40px;
+  left: 48px;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.reframe-next-back {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.reframe-next-back:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.reframe-next-back:active {
+  transform: scale(0.97);
+}
+
+.reframe-next-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 24px 80px;
+  box-sizing: border-box;
+}
+
+.reframe-next-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.reframe-next-title-block.reveal.visible .step-progress-100 {
+  animation: step-progress-100 0.8s ease forwards;
+}
+
+.reframe-next-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 3.5vw, 42px);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  text-align: center;
+  margin: 0 0 12px;
+  max-width: 560px;
+}
+
+.reframe-next-subtext {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.75;
+  text-align: center;
+  margin: 0;
+  max-width: 480px;
+}
+
+.reframe-next-content {
+  width: 100%;
+  max-width: 520px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Q1 — Selectable pills */
+.reframe-next-q1 {
+  width: 100%;
+}
+
+.reframe-next-question {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 400;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+  color: #243C2C;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.reframe-next-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.reframe-next-pill {
+  padding: 14px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: #243C2C;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  transform-origin: center;
+}
+
+.reframe-next-pill:focus {
+  outline: none;
+}
+
+.reframe-next-pill:hover,
+.reframe-next-pill:focus-visible {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.reframe-next-pill:active {
+  transform: scale(1.02);
+}
+
+.reframe-next-pill-selected {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(122, 148, 69, 0.2);
+  transform: scale(1.03);
+  box-shadow: 0 4px 20px rgba(36, 60, 44, 0.08);
+}
+
+.reframe-next-pill-selected:hover,
+.reframe-next-pill-selected:focus-visible {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.reframe-next-something-else-wrap {
+  margin-top: 16px;
+  width: 100%;
+  animation: reframe-next-fade-in 0.35s ease forwards;
+}
+
+.reframe-next-something-else-input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: #243C2C;
+  box-sizing: border-box;
+}
+
+.reframe-next-something-else-input::placeholder {
+  color: rgba(36, 60, 44, 0.45);
+}
+
+.reframe-next-something-else-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Q2 — Intensity slider */
+.reframe-next-q2 {
+  width: 100%;
+}
+
+.reframe-next-reveal-item {
+  animation: reframe-next-fade-in 0.4s ease forwards;
+}
+
+@keyframes reframe-next-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reframe-next-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.reframe-next-slider-value {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: #243C2C;
+  opacity: 0.9;
+}
+
+.reframe-next-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  max-width: 280px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(36, 60, 44, 0.12);
+}
+
+.reframe-next-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(36, 60, 44, 0.2);
+  box-shadow: 0 2px 12px rgba(36, 60, 44, 0.12);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.reframe-next-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 20px rgba(36, 60, 44, 0.15);
+}
+
+.reframe-next-slider:focus-visible {
+  outline: 2px solid rgba(122, 148, 69, 0.3);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.reframe-next-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(36, 60, 44, 0.2);
+  box-shadow: 0 2px 12px rgba(36, 60, 44, 0.12);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.reframe-next-slider::-moz-range-thumb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 20px rgba(36, 60, 44, 0.15);
+}
+
+/* Q3 — Optional context */
+.reframe-next-q3 {
+  width: 100%;
+}
+
+.reframe-next-label {
+  display: block;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 400;
+  color: #243C2C;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.reframe-next-textarea-mini {
+  width: 100%;
+  min-height: 72px;
+  max-height: 120px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #243C2C;
+  resize: vertical;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.reframe-next-textarea-mini::placeholder {
+  color: rgba(36, 60, 44, 0.45);
+}
+
+.reframe-next-textarea-mini:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* CTA */
+.reframe-next-cta-wrap {
+  margin-top: auto;
+  padding-top: 24px;
+  flex-shrink: 0;
+}
+
+.reframe-next-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  border-radius: 999px;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: opacity 0.35s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.reframe-next-btn-primary {
+  background: #243C2C;
+  color: #ECE69D;
+}
+
+.reframe-next-btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.reframe-next-btn-enabled {
+  opacity: 1;
+  box-shadow: 0 4px 20px rgba(36, 60, 44, 0.2);
+}
+
+.reframe-next-btn-enabled:hover {
+  transform: scale(1.05) translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 6px 28px rgba(36, 60, 44, 0.28);
+}
+
+.reframe-next-btn-enabled:active {
+  transform: scale(0.98);
+}

@@ -1,0 +1,582 @@
+/* Editorial homepage - strict spec match */
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+/* Palette - use only these */
+/* Glaucous #59789F | Powder Blue #A9B6C4 | Vanilla #ECE69D | Moss Green #7A9445 | Dark Green #243C2C */
+
+.home-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background: #f4f4f2;
+}
+
+.home-orb-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.home-orb-container > * {
+  pointer-events: auto;
+}
+
+.home-orb-container-dimmed .home-orb {
+  opacity: 0.82;
+  transition: opacity 400ms ease-out;
+}
+
+/* Background layer - parallax on scroll */
+.background-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('/hackathon.png') center center / 115% auto no-repeat;
+}
+
+/* Very subtle center darkening for contrast (optional) */
+.background-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(0,0,0,0.05) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* Grain overlay */
+.home-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* Floating animation - gentle drift */
+@keyframes home-orb-float {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(6px, -6px); }
+  50% { transform: translate(-4px, -8px); }
+  75% { transform: translate(-6px, 4px); }
+}
+
+@keyframes home-orb-float-2 {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(-5px, 7px); }
+  66% { transform: translate(4px, -6px); }
+}
+
+@keyframes home-orb-float-3 {
+  0%, 100% { transform: translate(0, 0); }
+  40% { transform: translate(5px, -7px); }
+  80% { transform: translate(-6px, 5px); }
+}
+
+@keyframes home-orb-float-4 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-7px, -5px); }
+}
+
+/* Orb wrappers - position + floating animation (20–30% larger) */
+.home-orb-wrap {
+  position: absolute;
+  width: 224px;
+  height: 224px;
+  z-index: 5;
+}
+
+.home-orb-wrap.home-orb-tl {
+  top: 18vh;
+  left: 14vw;
+  animation: home-orb-float 12s ease-in-out infinite;
+}
+
+.home-orb-wrap.home-orb-tr {
+  top: 22vh;
+  right: 14vw;
+  left: auto;
+  animation: home-orb-float-2 11s ease-in-out infinite 1.5s;
+}
+
+.home-orb-wrap.home-orb-bl {
+  bottom: 20vh;
+  left: 18vw;
+  top: auto;
+  animation: home-orb-float-3 13s ease-in-out infinite 0.5s;
+}
+
+.home-orb-wrap.home-orb-br {
+  bottom: 18vh;
+  right: 16vw;
+  left: auto;
+  top: auto;
+  animation: home-orb-float-4 10s ease-in-out infinite 2s;
+}
+
+.home-orb-parallax {
+  width: 100%;
+  height: 100%;
+  transition: transform 150ms ease-out;
+}
+
+/* Orbs - luminous glass spheres */
+.home-orb {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: #243C2C;
+  padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  opacity: 0.94;
+  transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1), filter 400ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home-orb[data-color="59789F"] {
+  background: radial-gradient(circle at 30% 30%, rgba(89,120,159,0.35) 0%, rgba(89,120,159,0.15) 50%, rgba(89,120,159,0.08) 70%, transparent 100%);
+  box-shadow: inset 0 0 70px rgba(255,255,255,0.22), 0 0 68px rgba(89,120,159,0.21);
+}
+
+.home-orb[data-color="7A9445"] {
+  background: radial-gradient(circle at 30% 30%, rgba(122,148,69,0.35) 0%, rgba(122,148,69,0.15) 50%, rgba(122,148,69,0.08) 70%, transparent 100%);
+  box-shadow: inset 0 0 70px rgba(255,255,255,0.22), 0 0 68px rgba(122,148,69,0.21);
+}
+
+.home-orb[data-color="A9B6C4"] {
+  background: radial-gradient(circle at 30% 30%, rgba(169,182,196,0.35) 0%, rgba(169,182,196,0.15) 50%, rgba(169,182,196,0.08) 70%, transparent 100%);
+  box-shadow: inset 0 0 70px rgba(255,255,255,0.22), 0 0 68px rgba(169,182,196,0.21);
+}
+
+.home-orb[data-color="ECE69D"] {
+  background: radial-gradient(circle at 30% 30%, rgba(236,230,157,0.35) 0%, rgba(236,230,157,0.15) 50%, rgba(236,230,157,0.08) 70%, transparent 100%);
+  box-shadow: inset 0 0 70px rgba(255,255,255,0.22), 0 0 68px rgba(236,230,157,0.21);
+}
+
+.home-orb:hover {
+  transform: scale(1.12);
+  filter: saturate(1.12);
+}
+
+.home-orb[data-color="59789F"]:hover {
+  box-shadow: inset 0 0 60px rgba(255,255,255,0.22), 0 0 85px rgba(89,120,159,0.30);
+}
+
+.home-orb[data-color="7A9445"]:hover {
+  box-shadow: inset 0 0 60px rgba(255,255,255,0.22), 0 0 85px rgba(122,148,69,0.30);
+}
+
+.home-orb[data-color="A9B6C4"]:hover {
+  box-shadow: inset 0 0 60px rgba(255,255,255,0.22), 0 0 85px rgba(169,182,196,0.30);
+}
+
+.home-orb[data-color="ECE69D"]:hover {
+  box-shadow: inset 0 0 60px rgba(255,255,255,0.22), 0 0 85px rgba(236,230,157,0.30);
+}
+
+.home-orb-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+
+.home-orb-desc {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+/* Headline shrinks when any orb hovered */
+.home-screen:has(.home-orb:hover) .home-headline {
+  transform: scale(0.9);
+  opacity: 0.85;
+}
+
+/* Center content - hero, must scroll naturally */
+.home-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 64px 24px 48px;
+  box-sizing: border-box;
+}
+
+.home-content-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 680px;
+}
+
+/* Headline wrapper */
+.headline-wrapper {
+  position: relative;
+  z-index: 10;
+}
+
+/* Headline */
+.home-headline {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 65px);
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  max-width: 680px;
+  text-shadow: 0 0 30px rgba(255,255,255,0.45);
+  transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.home-headline em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Start Reframing button - z-index 12 */
+.home-cta {
+  display: inline-block;
+  margin-top: 48px;
+  padding: 16px 48px;
+  border-radius: 999px;
+  background: #243C2C;
+  color: #ECE69D;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  box-shadow: 0 2px 16px rgba(36, 60, 44, 0.15);
+  position: relative;
+  z-index: 12;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.home-cta:hover {
+  transform: scale(1.05);
+  background: #1e3227;
+}
+
+/* Header — logo + About */
+.home-header {
+  position: fixed;
+  top: 40px;
+  left: 48px;
+  right: 48px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-logo {
+  text-decoration: none;
+  display: block;
+  opacity: 0;
+  animation: home-logo-fade-in 400ms ease-out forwards;
+  transition: opacity 300ms ease;
+}
+
+.home-logo:hover {
+  opacity: 0.85;
+}
+
+@keyframes home-logo-fade-in {
+  to { opacity: 1; }
+}
+
+.home-logo-img {
+  display: block;
+  height: 34px;
+  width: 136px;
+  background: #243C2C;
+  -webkit-mask: url('/reframe-logo.png') center / contain no-repeat;
+  mask: url('/reframe-logo.png') center / contain no-repeat;
+}
+
+/* About button — top right */
+.home-about-btn {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.75;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.home-about-btn:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.home-about-btn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .home-about-btn {
+    font-size: 13px;
+  }
+
+  .home-header {
+    left: 24px;
+    right: 24px;
+  }
+}
+
+/* ─── Scroll sections (below hero) ─── */
+
+.section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-content {
+  max-width: 700px;
+  text-align: center;
+}
+
+.section h2 {
+  font-family: "Futura", "Futura PT", Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 48px);
+  margin-bottom: 24px;
+  color: #243C2C;
+}
+
+.section h3 {
+  font-family: "Futura", "Futura PT", Avenir, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  margin: 0 0 12px;
+  color: #243C2C;
+}
+
+.section p {
+  font-family: "Futura", "Futura PT", Avenir, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.85;
+  color: #243C2C;
+  margin: 0 0 24px;
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+.section-label {
+  letter-spacing: 2px;
+  font-size: 12px;
+  margin-bottom: 60px;
+  opacity: 0.6;
+  color: #243C2C;
+}
+
+.step p {
+  margin: 0;
+}
+
+.step {
+  margin-bottom: 80px;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 48px;
+  padding: 16px 48px;
+  border-radius: 999px;
+  background: #243C2C;
+  color: #ECE69D;
+  font-family: "Futura", "Futura PT", Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 16px rgba(36, 60, 44, 0.15);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.cta:hover {
+  transform: scale(1.05);
+  background: #1e3227;
+  color: #ECE69D;
+}
+
+.home-section {
+  position: relative;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.home-section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-section-inner {
+  max-width: 700px;
+  text-align: center;
+}
+
+.home-section-meaning .home-section-inner {
+  max-width: 700px;
+}
+
+.home-section-heading {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4.5vw, 52px);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  margin: 0 0 28px;
+}
+
+.home-section-subtext {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: #243C2C;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.home-section-label {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #243C2C;
+  opacity: 0.7;
+  margin: 0 0 60px;
+}
+
+.home-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 90px;
+}
+
+.home-step {
+  text-align: center;
+}
+
+.home-step-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: #243C2C;
+  margin: 0 0 12px;
+}
+
+.home-step-desc {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #243C2C;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.home-section-final {
+  padding: 120px 24px;
+}
+
+.home-section-final-inner {
+  position: relative;
+}
+
+.home-section-final .home-section-heading,
+.section-final h2 {
+  margin-bottom: 20px;
+}
+
+.home-section-final .home-section-subtext,
+.section-final .section-content > p {
+  margin-bottom: 48px;
+}
+
+.home-section-final .home-cta,
+.section-final .cta {
+  margin-top: 0;
+}
+
+/* Reset transition-delay on second CTA so hover is instant; override reveal.visible transform on hover */
+.cta-no-hover-delay.reveal.visible {
+  transform-origin: center;
+  transition: transform 180ms ease-out, opacity 600ms ease-out;
+  transition-delay: 0s;
+}
+
+.home-cta.reveal.visible:hover {
+  transform: scale(1.05);
+}

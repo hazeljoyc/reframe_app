@@ -49,6 +49,6 @@ Backend: Timothy, Xinya
 ## 🌱 Future Improvements
 
 - More emotional states
-- Saved user plans
+- Saved user accounts
 - Corporate lingo translation tool
 - Expanded decision engine logic

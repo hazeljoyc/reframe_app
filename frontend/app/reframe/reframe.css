@@ -1,0 +1,298 @@
+/* Reframe - Emotional Input (Screen 3) */
+
+/* Palette - use only these */
+/* Glaucous #59789F | Powder Blue #A9B6C4 | Vanilla #ECE69D | Moss Green #7A9445 | Dark Green #243C2C */
+
+.reframe-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.reframe-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('/categories-bg.png') center / cover no-repeat;
+  animation: reframe-bg-float 24s ease-in-out infinite;
+}
+
+@keyframes reframe-bg-float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(2px, -3px); }
+  66% { transform: translate(-2px, 2px); }
+}
+
+.reframe-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.reframe-header {
+  position: fixed;
+  top: 40px;
+  left: 48px;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.reframe-back {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: #243C2C;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.reframe-back:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.reframe-back:active {
+  transform: scale(0.97);
+}
+
+.reframe-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.reframe-title-block.reveal.visible .step-progress-66 {
+  animation: step-progress-66 0.8s ease forwards;
+}
+
+.reframe-title-block .reframe-title {
+  margin: 0;
+}
+
+.reframe-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 80px;
+  box-sizing: border-box;
+}
+
+.reframe-title {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 3.5vw, 42px);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  color: #243C2C;
+  text-align: center;
+  margin: 0 0 56px;
+  max-width: 520px;
+}
+
+.emoji-slider-wrap {
+  width: 100%;
+  max-width: 520px;
+  margin-bottom: 32px;
+}
+
+.reframe-emotion-labels {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  animation: reframe-label-fade 0.4s ease;
+}
+
+@keyframes reframe-label-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reframe-emotion-label {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #243C2C;
+  opacity: 0.85;
+  margin: 0 0 6px;
+}
+
+.reframe-emotion-support {
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  color: #243C2C;
+  opacity: 0.7;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.emoji-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.emoji-track-line {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(36, 60, 44, 0.2), rgba(36, 60, 44, 0.15));
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.emoji-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  transform-origin: center;
+}
+
+.emoji-option:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 14px rgba(36, 60, 44, 0.12)) saturate(1.05);
+}
+
+.emoji-option.emoji-selected {
+  transform: scale(1.18);
+  filter: drop-shadow(0 0 20px rgba(36, 60, 44, 0.2)) saturate(1.15);
+}
+
+.emoji-option.emoji-selected .emoji-indicator {
+  opacity: 0.6;
+}
+
+.emoji-char {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.emoji-indicator {
+  width: 24px;
+  height: 3px;
+  background: #243C2C;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.emoji-selected .emoji-indicator {
+  opacity: 0.5;
+}
+
+@keyframes emoji-pulse {
+  0%, 100% { transform: scale(1.15); }
+  50% { transform: scale(1.22); }
+}
+
+.emoji-option.emoji-selected .emoji-char {
+  animation: emoji-pulse 0.5s ease;
+}
+
+.reframe-input-wrap {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 56px;
+}
+
+.reframe-input {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #243C2C;
+  transition: box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.reframe-input::placeholder {
+  color: rgba(36, 60, 44, 0.5);
+}
+
+.reframe-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 32px rgba(36, 60, 44, 0.1);
+}
+
+.reframe-cta-wrap {
+  margin-top: auto;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.reframe-continue {
+  display: inline-block;
+  padding: 16px 48px;
+  border-radius: 999px;
+  background: #243C2C;
+  color: #ECE69D;
+  font-family: 'Futura', 'Futura PT', Avenir, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.reframe-continue-inactive {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.reframe-continue-active {
+  opacity: 1;
+  cursor: pointer;
+  transform: scale(1.03);
+  box-shadow: 0 4px 20px rgba(36, 60, 44, 0.2);
+}
+
+.reframe-continue-active:hover {
+  transform: scale(1.05) translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 28px rgba(36, 60, 44, 0.25);
+}
+
+.reframe-continue-active:active {
+  transform: scale(0.98);
+}
+
